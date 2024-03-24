@@ -1,4 +1,5 @@
 from ast import Expression
+from base64 import urlsafe_b64encode
 from multiprocessing import context
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
@@ -9,12 +10,16 @@ from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, Us
 from rest_framework import status
 from .utils import send_generated_otp_to_email
 from django.utils.http import urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode
+
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.permissions import IsAuthenticated
 from .models import User
 from .serializers import GoogleSignInSerializer
-
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.conf import settings
 class GoogleOauthSignInview(GenericAPIView):
     serializer_class=GoogleSignInSerializer
 
@@ -75,7 +80,6 @@ class PasswordResetRequestView(GenericAPIView):
         return Response({'message':'we have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         # return Response({'message':'user with that email does not exist'}, status=status.HTTP_400_BAD_REQUEST)
     
-
 class PasswordResetConfirm(GenericAPIView):
 
     def get(self, request, uidb64, token):
@@ -117,8 +121,8 @@ class LogoutApiView(GenericAPIView):
         serializer=self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
- 
+        return Response({'success':True, 'message':"logout succesful"}, status=status.HTTP_200_OK)
+
 
 class UserProfileView(GenericAPIView):
     permission_classes = [IsAuthenticated]

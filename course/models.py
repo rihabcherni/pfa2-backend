@@ -1,6 +1,16 @@
 from djongo import models
-
 from accounts.models import User
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='assets/category', blank=True)
+    created_by= models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
 
 class Cours(models.Model):
     NIVEAU_CHOICES = (
@@ -9,7 +19,8 @@ class Cours(models.Model):
         ('avancé', 'Avancé'),
     )
     titre = models.CharField(max_length=255)
-    cours_photo = models.ImageField(upload_to='assets/cours/images', null=True, blank=True)
+    cours_photo = models.ImageField(upload_to='assets/cours', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
     description = models.TextField()
     enseignant = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     niveau = models.CharField(max_length=20, choices=NIVEAU_CHOICES)
@@ -78,7 +89,7 @@ class Commentaire(models.Model):
        
 # class Quiz(models.Model):
 #     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
-#     quiz_image = models.ImageField(upload_to='assets/quiz/images', null=True, blank=True)
+#     quiz_image = models.ImageField(upload_to='assets/quiz', null=True, blank=True)
 #     questions =  models.ArrayField(model_container= Question)
 
 #     def __str__(self):

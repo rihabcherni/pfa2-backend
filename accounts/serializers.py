@@ -103,8 +103,9 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         email = attrs.get('email')
-        if User.objects.filter(email=email).exists():
-            user= User.objects.get(email=email)
+        user = User.objects.filter(email=email).first()
+
+        if user:
             uidb64=urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
             request=self.context.get('request')
@@ -118,7 +119,8 @@ class PasswordResetRequestSerializer(serializers.Serializer):
                 'to_email':user.email
                 }
             send_normal_email(data)
-
+        else: 
+            raise serializers.ValidationError("User with this email does not exist.")
         return super().validate(attrs)
 
     
@@ -152,15 +154,12 @@ class SetNewPasswordSerializer(serializers.Serializer):
     
 class LogoutUserSerializer(serializers.Serializer):
     refresh_token=serializers.CharField()
-
     default_error_message = {
         'bad_token': ('Token is expired or invalid')
     }
-
     def validate(self, attrs):
         self.token = attrs.get('refresh_token')
         return attrs
-    
     def save(self, **kwargs):
         try:
             token=RefreshToken(self.token)
