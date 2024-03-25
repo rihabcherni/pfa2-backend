@@ -6,7 +6,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from .models import OneTimePassword
-from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, UserProfileSerializer, UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, UserUpdateSerializer
+from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, UserCountSerializer, UserProfileSerializer, UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, UserUpdateSerializer
 from rest_framework import status
 from .utils import send_generated_otp_to_email
 from django.utils.http import urlsafe_base64_decode
@@ -20,6 +20,24 @@ from .serializers import GoogleSignInSerializer
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
+from rest_framework.views import APIView
+
+class UserCountAPIView(APIView):
+    def get(self, request, format=None):
+        admin_count = User.objects.get_count_by_type('admin')
+        student_count = User.objects.get_count_by_type('etudiant')
+        teacher_count = User.objects.get_count_by_type('enseignant')
+        # verified_users_count = User.objects.get_verified_users_count()
+
+        data = {
+            'admin_count': admin_count,
+            'student_count': student_count,
+            'teacher_count': teacher_count,
+            # 'verified_users_count': verified_users_count
+        }
+        serializer = UserCountSerializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class GoogleOauthSignInview(GenericAPIView):
     serializer_class=GoogleSignInSerializer
 

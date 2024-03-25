@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import  Cours, CourseScore, Module, Lecon, Inscription, Commentaire
+from .models import  Category, Cours, CourseProgressScore, Module, Lecon, Inscription, Commentaire
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
 
 class CoursSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,6 +14,16 @@ class CoursSerializer(serializers.ModelSerializer):
         if value.type_user != 'enseignant':
             raise serializers.ValidationError("Only teachers can be assigned as the teacher for a course.")
         return value
+
+class CourseProgressScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseProgressScore
+        fields = '__all__'
+
+    def validate_user(self, value):
+        if value.type_user != 'etudiant':
+            raise serializers.ValidationError("Only Etudiants can do the course.")
+        return value  
     
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,17 +58,6 @@ class CommentaireSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Quiz
 #         fields = '__all__'
-
-
-class CourseScoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CourseScore
-        fields = '__all__'
-
-    def validate_user(self, value):
-        if value.type_user != 'etudiant':
-            raise serializers.ValidationError("Only Etudiants can do the course.")
-        return value
     
 # class EtudiantQuizResponseSerializer(serializers.ModelSerializer):
 #     class Meta:

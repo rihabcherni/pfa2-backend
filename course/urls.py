@@ -2,6 +2,9 @@ from django.urls import path
 from course.views import *
 
 urlpatterns = [
+    path('category/', CategoryListCreate.as_view(), name='category-list-create'),
+    path('category/<int:pk>/', CategoryRetrieveUpdateDestroy.as_view(), name='category-retrieve-update-destroy'),   
+    
     path('cours/', CoursListCreate.as_view(), name='cours-list-create'),
     path('cours/<int:pk>/', CoursRetrieveUpdateDestroy.as_view(), name='cours-retrieve-update-destroy'),
    

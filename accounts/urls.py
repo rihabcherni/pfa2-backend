@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
         RegisterView,
         UpdateUserProfileView,
+        UserCountAPIView,
         UserProfileView, 
         VerifyUserEmail,
         LoginUserView, 
@@ -13,8 +14,8 @@ from rest_framework_simplejwt.views import (TokenRefreshView,)
 from .views import GoogleOauthSignInview
 
 urlpatterns = [
+    path('user-count/', UserCountAPIView.as_view(), name='user-count'),
     path('google/', GoogleOauthSignInview.as_view(), name='google'),
-
     path('register/', RegisterView.as_view(), name='register'),
     path('verify-email/', VerifyUserEmail.as_view(), name='verify'),
     path('login/', LoginUserView.as_view(), name='login-user'),

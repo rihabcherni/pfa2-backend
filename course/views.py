@@ -2,12 +2,20 @@ from django.db.models import Sum
 from django.shortcuts import render
 from requests import Response
 from rest_framework import generics
-from .models import Cours, CourseScore, Module, Lecon, Inscription, Commentaire
-from .serializers import CoursSerializer, ModuleSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer
+from .models import Category, Cours, CourseProgressScore, Module, Lecon, Inscription, Commentaire
+from .serializers import CategorySerializer, CoursSerializer, ModuleSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 
 # Create your views here.
+class CategoryListCreate(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class CategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 class CoursListCreate(generics.ListCreateAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursSerializer
@@ -94,4 +102,4 @@ class CommentaireRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 #     if total_questions > 0:
 #         score_percentage = (total_score / total_questions) * 100
-#         CourseScore.objects.update_or_create(course_id=course_id, student_id=student_id, defaults={'score': score_percentage})
+#         CourseProgressScore.objects.update_or_create(course_id=course_id, student_id=student_id, defaults={'score': score_percentage})

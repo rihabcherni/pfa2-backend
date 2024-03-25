@@ -3,15 +3,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.utils.translation import gettext_lazy as _
 
-
-
 class UserManager(BaseUserManager):
     def email_validator(self, email):
         try:
             validate_email(email)
         except ValidationError:
             raise ValueError(_("please enter a valid email address"))
-
+        
     def create_user(self, email, first_name, last_name, password, **extra_fields):
         if email:
             email = self.normalize_email(email)
@@ -43,3 +41,9 @@ class UserManager(BaseUserManager):
         )
         user.save(using=self._db)
         return user
+    
+    def get_count_by_type(self, type):
+        return self.filter(type_user=type).count()
+
+    # def get_verified_users_count(self):
+    #     return self.filter(is_verified=True).count()
