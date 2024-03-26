@@ -9,8 +9,8 @@ AUTH_PROVIDERS = {'email': 'email', 'google': 'google', 'github': 'github', 'lin
 class User(AbstractBaseUser, PermissionsMixin):
     TYPE_CHOICES = (
         ('admin', 'Admin'),
-        ('etudiant', 'Etudiant'),
-        ('enseignant', 'Enseignant'),
+        ('apprenant', 'Apprenant'),
+        ('auteur', 'Auteur'),
     )    
     email = models.EmailField(max_length=255, verbose_name=_("Email Address"), unique=True)
     first_name = models.CharField(max_length=100, verbose_name=_("First Name"), default='')

@@ -19,9 +19,4 @@ urlpatterns = [
    
     path('commentaires/', CommentaireListCreate.as_view(), name='commentaire-list-create'),
     path('commentaires/<int:pk>/', CommentaireRetrieveUpdateDestroy.as_view(), name='commentaire-retrieve-update-destroy'),
-   
-    # path('quiz/', QuizListCreate.as_view(), name='quiz-list-create'),
-    # path('quiz/<int:pk>/', QuizRetrieveUpdateDestroy.as_view(), name='quiz-retrieve-update-destroy'),
-    # path('quiz/response/', EtudiantQuizResponseView.as_view(), name='quiz_response'),
-
 ]

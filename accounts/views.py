@@ -25,15 +25,13 @@ from rest_framework.views import APIView
 class UserCountAPIView(APIView):
     def get(self, request, format=None):
         admin_count = User.objects.get_count_by_type('admin')
-        student_count = User.objects.get_count_by_type('etudiant')
-        teacher_count = User.objects.get_count_by_type('enseignant')
-        # verified_users_count = User.objects.get_verified_users_count()
+        student_count = User.objects.get_count_by_type('apprenant')
+        teacher_count = User.objects.get_count_by_type('auteur')
 
         data = {
             'admin_count': admin_count,
             'student_count': student_count,
             'teacher_count': teacher_count,
-            # 'verified_users_count': verified_users_count
         }
         serializer = UserCountSerializer(data)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -44,6 +44,3 @@ class UserManager(BaseUserManager):
     
     def get_count_by_type(self, type):
         return self.filter(type_user=type).count()
-
-    # def get_verified_users_count(self):
-    #     return self.filter(is_verified=True).count()

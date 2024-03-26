@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='courseprogressscore',
-            name='etudiant',
+            name='Apprenant',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
     ]
