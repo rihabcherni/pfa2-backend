@@ -44,3 +44,5 @@ class UserManager(BaseUserManager):
     
     def get_count_by_type(self, type):
         return self.filter(type_user=type).count()
+
+

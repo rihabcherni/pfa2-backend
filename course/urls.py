@@ -14,6 +14,18 @@ urlpatterns = [
     path('lecons/', LeconListCreate.as_view(), name='lecon-list-create'),
     path('lecons/<int:pk>/', LeconRetrieveUpdateDestroy.as_view(), name='lecon-retrieve-update-destroy'),
    
+    path('contenu-image/', ContenuImageListCreate.as_view(), name='contenu-image-list-create'),
+    path('contenu-image/<int:pk>/', ContenuImageRetrieveUpdateDestroy.as_view(), name='contenu-image-retrieve-update-destroy'),
+
+    path('contenu-texte/', ContenuTexteListCreate.as_view(), name='contenu-texte-list-create'),
+    path('contenu-texte/<int:pk>/', ContenuTexteRetrieveUpdateDestroy.as_view(), name='contenu-texte-retrieve-update-destroy'),
+
+    path('contenu-audio/', ContenuAudioListCreate.as_view(), name='contenu-audio-list-create'),
+    path('contenu-audio/<int:pk>/', ContenuAudioRetrieveUpdateDestroy.as_view(), name='contenu-audio-retrieve-update-destroy'),
+
+    path('contenu-video/', ContenuVideoListCreate.as_view(), name='contenu-video-list-create'),
+    path('contenu-video/<int:pk>/', ContenuVideoRetrieveUpdateDestroy.as_view(), name='contenu-video-retrieve-update-destroy'),
+    
     path('inscriptions/', InscriptionListCreate.as_view(), name='inscription-list-create'),
     path('inscriptions/<int:pk>/', InscriptionRetrieveUpdateDestroy.as_view(), name='inscription-retrieve-update-destroy'),
    

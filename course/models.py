@@ -12,6 +12,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def courseNumber(self):
+        return Cours.objects.filter(category=self).count()
+
 
 class Cours(models.Model):
     NIVEAU_CHOICES = (
@@ -23,12 +27,15 @@ class Cours(models.Model):
     cours_photo = models.ImageField(upload_to='assets/cours', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
     description = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    auteur = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     niveau = models.CharField(max_length=20, choices=NIVEAU_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.titre
+    
+    def moduleNumber(self):
+        return Module.objects.filter(cours=self).count()
 
 class CourseProgressScore(models.Model):
     course = models.ForeignKey('Cours', on_delete=models.CASCADE)
@@ -48,6 +55,9 @@ class Module(models.Model):
     def __str__(self):
         return self.titre
     
+    def leconNumber(self):
+        return Lecon.objects.filter(module=self).count()
+    
 class Lecon(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE, null=True)
     titre = models.CharField(max_length=255)
@@ -56,8 +66,16 @@ class Lecon(models.Model):
 
     def __str__(self):
         return self.titre
+    def imageNumber(self):
+        return ContenuImage.objects.filter(lecon=self).count()    
+    def audioNumber(self):
+        return ContenuAudio.objects.filter(lecon=self).count()    
+    def videoNumber(self):
+        return ContenuVideo.objects.filter(lecon=self).count()    
+    def texteNumber(self):
+        return ContenuTexte.objects.filter(lecon=self).count()
 
-class contenuTexte(models.Model):
+class ContenuTexte(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
     texte = models.TextField()
@@ -66,7 +84,7 @@ class contenuTexte(models.Model):
     def __str__(self):
         return self.titre
 
-class contenuImage(models.Model):
+class ContenuImage(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
     contenu_image = models.ImageField(upload_to='assets/lecons/images', null=True, blank=True)
@@ -76,7 +94,7 @@ class contenuImage(models.Model):
     def __str__(self):
         return self.titre
 
-class contenuVideo(models.Model):
+class ContenuVideo(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
     video = models.URLField(null=True, blank=True)
@@ -86,7 +104,7 @@ class contenuVideo(models.Model):
     def __str__(self):
         return self.titre
 
-class contenuAudio(models.Model):
+class ContenuAudio(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
     audio = models.FileField(upload_to='assets/lecons/audio', null=True, blank=True)
