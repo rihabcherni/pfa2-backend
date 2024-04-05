@@ -50,7 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class OneTimePassword(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    otp = models.CharField(max_length=6, default='123456')
+    otp = models.CharField(max_length=4, default='1234')
 
     def __str__(self):
         return f"{self.user.first_name} - otp code"

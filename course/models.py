@@ -16,7 +16,6 @@ class Category(models.Model):
     def courseNumber(self):
         return Cours.objects.filter(category=self).count()
 
-
 class Cours(models.Model):
     NIVEAU_CHOICES = (
         ('débutant', 'Débutant'),
@@ -29,13 +28,14 @@ class Cours(models.Model):
     description = models.TextField()
     auteur = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     niveau = models.CharField(max_length=20, choices=NIVEAU_CHOICES)
+    ratings = models.DecimalField(max_digits=3,decimal_places=2,default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.titre
     
-    def moduleNumber(self):
-        return Module.objects.filter(cours=self).count()
+    def leconNumber(self):
+        return Lecon.objects.filter(cours=self).count()
 
 class CourseProgressScore(models.Model):
     course = models.ForeignKey('Cours', on_delete=models.CASCADE)
@@ -47,19 +47,8 @@ class CourseProgressScore(models.Model):
     def __str__(self):
         return f"{self.apprenant} - {self.course} - Score: {self.score}"
         
-class Module(models.Model):
-    cours = models.ForeignKey(Cours, on_delete=models.CASCADE)
-    titre = models.CharField(max_length=255)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.titre
-    
-    def leconNumber(self):
-        return Lecon.objects.filter(module=self).count()
-    
 class Lecon(models.Model):
-    module = models.ForeignKey(Module, on_delete=models.CASCADE, null=True)
+    cours = models.ForeignKey(Cours, on_delete=models.CASCADE, null=True)
     titre = models.CharField(max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -131,4 +120,12 @@ class Commentaire(models.Model):
     def __str__(self):
         return f"{self.apprenant} - {self.lecon}"
 
+class Review(models.Model):
+    cours = models.ForeignKey(Cours, null=True, on_delete=models.CASCADE,related_name='reviews')
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    rating = models.IntegerField(default=0)
+    comment = models.TextField(max_length=1000,default="",blank=False) 
+    createAt = models.DateTimeField(auto_now_add=True) 
 
+    def __str__(self):
+        return self.comment

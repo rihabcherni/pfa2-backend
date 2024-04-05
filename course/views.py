@@ -1,11 +1,15 @@
-from django.db.models import Sum
-from django.shortcuts import render
+from audioop import avg
 from requests import Response
 from rest_framework import generics
-from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, CourseProgressScore, Module, Lecon, Inscription, Commentaire
-from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursSerializer, ModuleSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer
+from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, Lecon, Inscription, Commentaire, Review
+from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer
 from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.decorators import api_view,permission_classes
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Avg
+
+
 
 class CategoryListCreate(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -22,14 +26,6 @@ class CoursListCreate(generics.ListCreateAPIView):
 class CoursRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursSerializer
-
-class ModuleListCreate(generics.ListCreateAPIView):
-    queryset = Module.objects.all()
-    serializer_class = ModuleSerializer
-
-class ModuleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Module.objects.all()
-    serializer_class = ModuleSerializer
 
 class LeconListCreate(generics.ListCreateAPIView):
     queryset = Lecon.objects.all()
@@ -87,4 +83,61 @@ class CommentaireListCreate(generics.ListCreateAPIView):
 class CommentaireRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Commentaire.objects.all()
     serializer_class = CommentaireSerializer
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_review(request,pk):
+    user = request.user
+    cours = get_object_or_404(Cours,id=pk)
+    data = request.data
+    review = cours.reviews.filter(user=user)
+   
+    if data['rating'] <= 0 or data['rating'] > 10:
+        return Response({"error":'Please select between 1 to 5 only'}
+                        ,status=status.HTTP_400_BAD_REQUEST) 
+    elif review.exists():
+        new_review = {'rating':data['rating'], 'comment':data['comment'] }
+        review.update(**new_review)
+
+        rating = cours.reviews.aggregate(avg_ratings = avg('rating'))
+        cours.ratings = rating['avg_ratings']
+        cours.save()
+
+        return Response({'details':'cours review updated'})
+    else:
+        Review.objects.create(
+            user=user,
+            cours=cours,
+            rating= data['rating'],
+            comment= data['comment']
+        )
+        rating = cours.reviews.aggregate(avg_ratings = Avg('rating'))
+        cours.ratings = rating['avg_ratings']
+        cours.save()
+        return Response({'details':'cours review created'})
+    
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_review(request,pk):
+    user = request.user
+    cours = get_object_or_404(Cours,id=pk)
+   
+    review = cours.reviews.filter(user=user)
+   
+ 
+    if review.exists():
+        review.delete()
+        rating = cours.reviews.aggregate(avg_ratings = Avg('rating'))
+        if rating['avg_ratings'] is None:
+            rating['avg_ratings'] = 0
+            cours.ratings = rating['avg_ratings']
+            cours.save()
+            return Response({'details':'Cours review deleted'})
+    else:
+        return Response({'error':'Review not found'},status=status.HTTP_404_NOT_FOUND)
+
+
 

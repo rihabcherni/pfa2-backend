@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
@@ -156,7 +157,7 @@ SIMPLE_JWT = {
 }
 
 DOMAIN='localhost:3000'
-SITE_NAME = 'Henry Ultimate Authentication Course'
+SITE_NAME = 'PFA2 Nawarny App'
 
 GOOGLE_CLIENT_ID=env("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET=env("GOOGLE_CLIENT_SECRET")

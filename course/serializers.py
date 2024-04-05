@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import  Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, CourseProgressScore, Module, Lecon, Inscription, Commentaire
+from .models import  Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, CourseProgressScore, Lecon, Inscription, Commentaire, Review
 
 class CategorySerializer(serializers.ModelSerializer):
     course_number = serializers.SerializerMethodField()
@@ -10,9 +10,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_course_number(self, category):
         return category.courseNumber()
-    
+
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = "__all__"
+          
 class CoursSerializer(serializers.ModelSerializer):
-    module_number = serializers.SerializerMethodField()
+    lecon_number = serializers.SerializerMethodField()
+    reviews = serializers.SerializerMethodField(method_name='get_reviews',read_only=True)
     class Meta:
         model = Cours
         fields = '__all__'
@@ -21,9 +28,13 @@ class CoursSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Only teachers can be assigned as the auteurs for a course.")
         return value
     
-    def get_module_number(self, cours):
-        return cours.moduleNumber()
-    
+    def get_lecon_number(self, cours):
+        return cours.leconNumber()
+  
+    def get_reviews(self,obj):
+        reviews = obj.reviews.all()
+        serializer = ReviewSerializer(reviews,many=True)
+        return serializer.data
 
 class CourseProgressScoreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,15 +46,6 @@ class CourseProgressScoreSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Only Etudiants can do the course.")
         return value  
     
-class ModuleSerializer(serializers.ModelSerializer):
-    lecon_number = serializers.SerializerMethodField()
-    class Meta:
-        model = Module
-        fields = '__all__'
-    
-    def get_lecon_number(self, module):
-        return module.leconNumber()
-
 class LeconSerializer(serializers.ModelSerializer):
     image_number = serializers.SerializerMethodField()
     audio_number = serializers.SerializerMethodField()
