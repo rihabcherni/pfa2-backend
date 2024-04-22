@@ -27,6 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(auto_now=True)
     auth_provider = models.CharField(max_length=50, blank=False, null=False, default=AUTH_PROVIDERS.get('email'))
     type_user = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    photo = models.ImageField(upload_to='assets/user_photos/', blank=True, null=True)  
 
     USERNAME_FIELD = "email"
 

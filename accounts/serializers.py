@@ -13,6 +13,12 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .helpers import Google, register_social_user
 from django.conf import settings
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','is_verified','email', 'phone_number', 'first_name', 'last_name', 'photo','address','date_of_birth']
+                
+
 class GoogleSignInSerializer(serializers.Serializer):
     access_token=serializers.CharField(min_length=6)
 
@@ -61,9 +67,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             password=validated_data.get('password')
         )
         return user
-
 class LoginSerializer(serializers.ModelSerializer):  
     email = serializers.EmailField(max_length=155, min_length=6)
+    photo = serializers.ImageField( read_only=True)  
     type_user = serializers.CharField(max_length=100, read_only=True)  
     password=serializers.CharField(max_length=68, write_only=True)
     full_name=serializers.CharField(max_length=255, read_only=True)
@@ -72,8 +78,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'full_name', 'access_token', 'refresh_token', 'type_user']
-
+        fields = ['email','photo', 'password', 'full_name', 'access_token', 'refresh_token', 'type_user']
 
     def validate(self, attrs):
         email = attrs.get('email')
@@ -87,12 +92,12 @@ class LoginSerializer(serializers.ModelSerializer):
         tokens=user.tokens()
         return {
             'email':user.email,
+            'photo':user.photo,
             'type_user': user.type_user,
             'full_name':user.get_full_name,
             "access_token":str(tokens.get('access')),
             "refresh_token":str(tokens.get('refresh'))
         }
-
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255)
