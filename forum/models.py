@@ -1,13 +1,10 @@
 from django.db import models
-
 from accounts.models import User
 from course.models import Cours
-
 # Create your models here.
 
 class Discussion(models.Model):
     cours = models.ForeignKey(Cours, on_delete=models.CASCADE)
-    auteur = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     titre = models.CharField(max_length=255)
     description= models.CharField(max_length=255)
     created_at  = models.DateTimeField(auto_now_add=True)
@@ -27,7 +24,7 @@ class QuestionPoser(models.Model):
         return f"{self.question}"
     
 class Reponse(models.Model):
-    discussion = models.ForeignKey(QuestionPoser, on_delete=models.CASCADE)
+    question_poser = models.ForeignKey(QuestionPoser, on_delete=models.CASCADE)
     auteur = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     contenu= models.CharField(max_length=255)
     created_at  = models.DateTimeField(auto_now_add=True)

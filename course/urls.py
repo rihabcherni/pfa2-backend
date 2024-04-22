@@ -1,5 +1,7 @@
 from django.urls import path
 from course.views import *
+from project import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('category/', CategoryListCreate.as_view(), name='category-list-create'),
@@ -25,7 +27,10 @@ urlpatterns = [
     
     path('inscriptions/', InscriptionListCreate.as_view(), name='inscription-list-create'),
     path('inscriptions/<int:pk>/', InscriptionRetrieveUpdateDestroy.as_view(), name='inscription-retrieve-update-destroy'),
+       
+    path('reviews/', ReviewListCreate.as_view(), name='Review-list-create'),
+    path('reviews/<int:pk>/', ReviewRetrieveUpdateDestroy.as_view(), name='Review-retrieve-update-destroy'),
    
     path('commentaires/', CommentaireListCreate.as_view(), name='commentaire-list-create'),
     path('commentaires/<int:pk>/', CommentaireRetrieveUpdateDestroy.as_view(), name='commentaire-retrieve-update-destroy'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

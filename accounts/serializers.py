@@ -175,7 +175,7 @@ class LogoutUserSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name','phone_number', 'address', 'date_of_birth', 'cin']  
+        fields = ['email', 'first_name', 'last_name','phone_number', 'address', 'ville', 'date_of_birth']  
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -186,4 +186,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'phone_number', 'address', 'date_of_birth', 'cin']
+        fields = ['email', 'first_name', 'last_name', 'phone_number', 'address',  'ville','date_of_birth']

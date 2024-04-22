@@ -5,7 +5,6 @@ from course.models import Lecon
 
 class Quiz(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
-    apprenant = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     titre = models.CharField(max_length=255)
     quiz_image = models.ImageField(upload_to='assets/quiz', null=True, blank=True)
     description_image = models.CharField(max_length=255)

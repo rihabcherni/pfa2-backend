@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from datetime import timedelta
+import os
 from pathlib import Path
 import environ
 
@@ -132,8 +133,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -175,3 +174,8 @@ EMAIL_HOST_PASSWORD = '24b31c455d67b3'
 DEFAULT_FROM_EMAIL='rihabcherni000@gmail.com'
 EMAIL_PORT = '2525'
 EMAIL_USE_TLS= True
+
+
+STATIC_URL = 'static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

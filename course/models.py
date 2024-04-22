@@ -22,31 +22,54 @@ class Cours(models.Model):
         ('intermédiaire', 'Intermédiaire'),
         ('avancé', 'Avancé'),
     )
+    
+    LANGUE_CHOICES = (
+        ('français', 'Français'),
+        ('anglais', 'Anglais'),
+        ('espagnol', 'Espagnol'),
+        ('allemand', 'Allemand'),
+        ('italien', 'Italien'),
+        ('portugais', 'Portugais'),
+        ('chinois', 'Chinois'),
+        ('arabe', 'Arabe'),
+    )
+
     titre = models.CharField(max_length=255)
     cours_photo = models.ImageField(upload_to='assets/cours', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
     description = models.TextField()
+    langue = models.CharField(max_length=20, choices=LANGUE_CHOICES, default="")  
     auteur = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     niveau = models.CharField(max_length=20, choices=NIVEAU_CHOICES)
-    ratings = models.DecimalField(max_digits=3,decimal_places=2,default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.titre
     
     def leconNumber(self):
         return Lecon.objects.filter(cours=self).count()
-
-class CourseProgressScore(models.Model):
-    course = models.ForeignKey('Cours', on_delete=models.CASCADE)
-    apprenant = models.ForeignKey(User, on_delete=models.CASCADE)
-    progression = models.IntegerField(default=0)
-    created_at  = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+        
+class Review(models.Model):
+    cours = models.ForeignKey(Cours, null=True, on_delete=models.CASCADE,related_name='reviews')
+    apprenant = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    rating = models.IntegerField(default=0)
+    comment = models.TextField(max_length=1000,default="",blank=False) 
+    createAt = models.DateTimeField(auto_now_add=True) 
 
     def __str__(self):
+        return self.comment
+
+class Inscription(models.Model):
+    apprenant = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    cours = models.ForeignKey(Cours, on_delete=models.CASCADE)
+    progression = models.IntegerField(default=0)
+    date_inscription = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
         return f"{self.apprenant} - {self.course} - Score: {self.score}"
-        
+    
 class Lecon(models.Model):
     cours = models.ForeignKey(Cours, on_delete=models.CASCADE, null=True)
     titre = models.CharField(max_length=255)
@@ -76,7 +99,7 @@ class ContenuTexte(models.Model):
 class ContenuImage(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
-    contenu_image = models.ImageField(upload_to='assets/lecons/images', null=True, blank=True)
+    lien_image = models.ImageField(upload_to='assets/lecons/images', null=True, blank=True)
     desciption_image = models.CharField(max_length=255, default="")
     ordre = models.IntegerField(default=0)
 
@@ -86,7 +109,7 @@ class ContenuImage(models.Model):
 class ContenuVideo(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
-    video = models.URLField(null=True, blank=True)
+    lien_video = models.URLField(null=True, blank=True)
     desciption_video = models.CharField(max_length=255, default="")
     ordre = models.IntegerField(default=0)
 
@@ -96,20 +119,12 @@ class ContenuVideo(models.Model):
 class ContenuAudio(models.Model):
     lecon = models.ForeignKey(Lecon, on_delete=models.CASCADE)
     titre = models.CharField(max_length=255)
-    audio = models.FileField(upload_to='assets/lecons/audio', null=True, blank=True)
+    lien_audio = models.FileField(upload_to='assets/lecons/audio', null=True, blank=True)
     desciption_audio = models.CharField(max_length=255, default="")
     ordre = models.IntegerField(default=0)
 
     def __str__(self):
         return self.titre
-    
-class Inscription(models.Model):
-    apprenant = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-    cours = models.ForeignKey(Cours, on_delete=models.CASCADE)
-    date_inscription = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.apprenant} - {self.cours}"
     
 class Commentaire(models.Model):
     apprenant =  models.ForeignKey(User, on_delete=models.CASCADE, default=None)
@@ -119,13 +134,3 @@ class Commentaire(models.Model):
 
     def __str__(self):
         return f"{self.apprenant} - {self.lecon}"
-
-class Review(models.Model):
-    cours = models.ForeignKey(Cours, null=True, on_delete=models.CASCADE,related_name='reviews')
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    rating = models.IntegerField(default=0)
-    comment = models.TextField(max_length=1000,default="",blank=False) 
-    createAt = models.DateTimeField(auto_now_add=True) 
-
-    def __str__(self):
-        return self.comment
