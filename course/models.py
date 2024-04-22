@@ -18,9 +18,9 @@ class Category(models.Model):
 
 class Cours(models.Model):
     NIVEAU_CHOICES = (
-        ('débutant', 'Débutant'),
-        ('intermédiaire', 'Intermédiaire'),
-        ('avancé', 'Avancé'),
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
     )
     
     LANGUE_CHOICES = (

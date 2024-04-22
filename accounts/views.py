@@ -1,43 +1,19 @@
-from ast import Expression
-from base64 import urlsafe_b64encode
-from multiprocessing import context
-from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 
-from course.models import Cours
 from .models import OneTimePassword
-from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, DashAdminCountSerializer, UserProfileSerializer, UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, UserUpdateSerializer
+from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, UserProfileSerializer, UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, UserUpdateSerializer
 from rest_framework import status
 from .utils import send_generated_otp_to_email
 from django.utils.http import urlsafe_base64_decode
-from django.utils.http import urlsafe_base64_encode
 
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.permissions import IsAuthenticated
 from .models import User
 from .serializers import GoogleSignInSerializer
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.conf import settings
 from rest_framework.views import APIView
-
-class AdminDashCountAPIView(APIView):
-    def get(self, request, format=None):
-        admin_count = User.objects.get_count_by_type('admin')
-        student_count = User.objects.get_count_by_type('apprenant')
-        teacher_count = User.objects.get_count_by_type('auteur')
-        course_count = Cours.objects.count()
-        data = {
-            'admin_count': admin_count,
-            'student_count': student_count,
-            'teacher_count': teacher_count,
-            'course_count': course_count,
-        }
-        serializer = DashAdminCountSerializer(data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GoogleOauthSignInview(GenericAPIView):
     serializer_class=GoogleSignInSerializer

@@ -35,12 +35,6 @@ class GoogleSignInSerializer(serializers.Serializer):
 
         return register_social_user(provider, email, first_name, last_name)
 
-class DashAdminCountSerializer(serializers.Serializer):
-    admin_count = serializers.IntegerField()
-    student_count = serializers.IntegerField()
-    teacher_count = serializers.IntegerField()
-    course_count = serializers.IntegerField()
-
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     password2= serializers.CharField(max_length=68, min_length=6, write_only=True)
