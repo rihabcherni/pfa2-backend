@@ -9,7 +9,8 @@ urlpatterns = [
     
     path('cours/', CoursListCreate.as_view(), name='cours-list-create'),
     path('cours/<int:pk>/', CoursRetrieveUpdateDestroy.as_view(), name='cours-retrieve-update-destroy'),
-       
+    path('last-5-courses/', last_5_courses_api, name='last_5_courses_api'),
+   
     path('lecons/', LeconListCreate.as_view(), name='lecon-list-create'),
     path('lecons/<int:pk>/', LeconRetrieveUpdateDestroy.as_view(), name='lecon-retrieve-update-destroy'),
    

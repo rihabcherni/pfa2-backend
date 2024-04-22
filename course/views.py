@@ -1,4 +1,5 @@
 from audioop import avg
+from django.http import JsonResponse
 from requests import Response
 from rest_framework import generics
 from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, Lecon, Inscription, Commentaire, Review
@@ -90,6 +91,25 @@ class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
+def last_5_courses_api(request):
+    courses = Cours.last_5_courses()
+    data = []
+    for course in courses:
+        author = course.auteur
+        author_name = f"{author.first_name} {author.last_name}"
+        course_data = {
+            'id': course.id,
+            'title': course.titre,
+            'cours_photo': course.cours_photo.url if course.cours_photo else None,
+            'category': course.category.name,
+            'description': course.description,
+            'langue': course.langue,
+            'niveau': course.niveau,
+            'auteur': author_name,
+            'created_at': course.created_at
+        }
+        data.append(course_data)
+    return JsonResponse(data, safe=False)
 
 # @api_view(['POST'])
 # @permission_classes([IsAuthenticated])

@@ -50,6 +50,9 @@ class Cours(models.Model):
     def leconNumber(self):
         return Lecon.objects.filter(cours=self).count()
         
+    def last_5_courses():
+        return Cours.objects.order_by('-created_at')[:5]
+    
 class Review(models.Model):
     cours = models.ForeignKey(Cours, null=True, on_delete=models.CASCADE,related_name='reviews')
     apprenant = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
