@@ -9,6 +9,7 @@ urlpatterns = [
     
     path('cours/', CoursListCreate.as_view(), name='cours-list-create'),
     path('cours/<int:pk>/', CoursRetrieveUpdateDestroy.as_view(), name='cours-retrieve-update-destroy'),
+    path('cours-only/', CoursOnlyListCreate.as_view(), name='cours-only'),
     path('last-5-courses/', last_5_courses_api, name='last_5_courses_api'),
    
     path('lecons/', LeconListCreate.as_view(), name='lecon-list-create'),
@@ -35,3 +36,5 @@ urlpatterns = [
     path('commentaires/', CommentaireListCreate.as_view(), name='commentaire-list-create'),
     path('commentaires/<int:pk>/', CommentaireRetrieveUpdateDestroy.as_view(), name='commentaire-retrieve-update-destroy'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

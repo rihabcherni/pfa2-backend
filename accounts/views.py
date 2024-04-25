@@ -3,7 +3,7 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 
 from .models import OneTimePassword
-from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, UserProfileSerializer, UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, UserUpdateSerializer
+from .serializers import PasswordResetRequestSerializer,LogoutUserSerializer, UserProfileSerializer, UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, UserSerializer, UserUpdateSerializer
 from rest_framework import status
 from .utils import send_generated_otp_to_email
 from django.utils.http import urlsafe_base64_decode
@@ -13,7 +13,21 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.permissions import IsAuthenticated
 from .models import User
 from .serializers import GoogleSignInSerializer
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+from rest_framework import generics
+
+class AuteurListView(ListAPIView):
+    queryset = User.objects.filter(type_user='auteur')
+    serializer_class = UserSerializer
+
+class ApprenantListView(ListAPIView):
+    queryset = User.objects.filter(type_user='apprenant')
+    serializer_class = UserSerializer
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 class GoogleOauthSignInview(GenericAPIView):
     serializer_class=GoogleSignInSerializer
@@ -25,7 +39,6 @@ class GoogleOauthSignInview(GenericAPIView):
         data=((serializer.validated_data)['access_token'])
         return Response(data, status=status.HTTP_200_OK) 
         
-
 class RegisterView(GenericAPIView):
     serializer_class = UserRegisterSerializer
 
@@ -64,7 +77,6 @@ class LoginUserView(GenericAPIView):
         serializer= self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class PasswordResetRequestView(GenericAPIView):
     serializer_class=PasswordResetRequestSerializer

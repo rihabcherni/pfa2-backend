@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from requests import Response
 from rest_framework import generics
 from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, Lecon, Inscription, Commentaire, Review
-from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer, ReviewSerializer
+from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursOnlySerializer, CoursSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer, ReviewSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view,permission_classes
 from django.shortcuts import get_object_or_404
@@ -21,6 +21,11 @@ class CategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 class CoursListCreate(generics.ListCreateAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursSerializer
+
+class CoursOnlyListCreate(generics.ListCreateAPIView):
+    queryset = Cours.objects.all()
+    serializer_class = CoursOnlySerializer
+
 
 class CoursRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cours.objects.all()
@@ -97,15 +102,24 @@ def last_5_courses_api(request):
     for course in courses:
         author = course.auteur
         author_name = f"{author.first_name} {author.last_name}"
+        
+        cours_photo_url = course.cours_photo.url if course.cours_photo else None
+        if cours_photo_url:
+            cours_photo_url = "http://localhost:8000" + cours_photo_url
+
+        author_photo_url = author.photo.url if author.photo else None
+        if author_photo_url:
+            author_photo_url = "http://localhost:8000" + author_photo_url
         course_data = {
             'id': course.id,
             'title': course.titre,
-            'cours_photo': course.cours_photo.url if course.cours_photo else None,
+            'cours_photo': cours_photo_url,
             'category': course.category.name,
             'description': course.description,
             'langue': course.langue,
             'niveau': course.niveau,
             'auteur': author_name,
+            'author_photo':author_photo_url,
             'created_at': course.created_at
         }
         data.append(course_data)

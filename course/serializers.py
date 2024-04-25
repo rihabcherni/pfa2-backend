@@ -13,11 +13,15 @@ class CategorySerializer(serializers.ModelSerializer):
         return category.courseNumber()
 
 class ReviewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Review
         fields = "__all__"
-          
+
+class CoursOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cours
+        fields = '__all__'
+        
 class CoursSerializer(serializers.ModelSerializer):
     lecon_number = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField(method_name='get_reviews',read_only=True)
