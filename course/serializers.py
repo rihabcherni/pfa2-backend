@@ -18,10 +18,38 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class CoursOnlySerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField()
+    auteur = serializers.SerializerMethodField()
+    auteur_photo = serializers.SerializerMethodField()
+    lecon_number = serializers.SerializerMethodField()
+    total_ratings = serializers.SerializerMethodField()
+    total_reviews = serializers.SerializerMethodField()
     class Meta:
         model = Cours
         fields = '__all__'
+    def get_lecon_number(self, cours):
+        return cours.leconNumber()
+    
+    def get_category(self, cours):
+        return cours.category.name
+    
+    def get_auteur(self, cours):
+        return cours.auteur.first_name+ " "+cours.auteur.last_name
+    
+    def get_auteur_photo(self, cours):
+        if cours.auteur.photo:
+            return 'http://localhost:8000/'+cours.auteur.photo.url
+        else:
+            return None
         
+    def get_total_reviews(self, obj):
+        total_reviews = obj.reviews.count()
+        return total_reviews or 0
+
+    def get_total_ratings(self, obj):
+        total_ratings = Review.objects.filter(cours=obj).aggregate(Sum('rating'))['rating__sum'] 
+        return total_ratings or 0
+    
 class CoursSerializer(serializers.ModelSerializer):
     lecon_number = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField(method_name='get_reviews',read_only=True)

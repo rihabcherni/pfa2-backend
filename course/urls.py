@@ -9,9 +9,11 @@ urlpatterns = [
     
     path('cours/', CoursListCreate.as_view(), name='cours-list-create'),
     path('cours/<int:pk>/', CoursRetrieveUpdateDestroy.as_view(), name='cours-retrieve-update-destroy'),
+    path('cours-only/<int:pk>/', CoursOnlyRetrieveUpdateDestroy.as_view(), name='cours-only-retrieve-update-destroy'),
     path('cours-only/', CoursOnlyListCreate.as_view(), name='cours-only'),
     path('last-5-courses/', last_5_courses_api, name='last_5_courses_api'),
-   
+    path('courses/category/<int:category_id>/', courses_by_category, name='courses_by_category'),
+
     path('lecons/', LeconListCreate.as_view(), name='lecon-list-create'),
     path('lecons/<int:pk>/', LeconRetrieveUpdateDestroy.as_view(), name='lecon-retrieve-update-destroy'),
    

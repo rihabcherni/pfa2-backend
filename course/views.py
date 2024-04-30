@@ -1,14 +1,10 @@
-from audioop import avg
 from django.http import JsonResponse
-from requests import Response
 from rest_framework import generics
 from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, Lecon, Inscription, Commentaire, Review
 from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursOnlySerializer, CoursSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer, ReviewSerializer
-from rest_framework import status
-from rest_framework.decorators import api_view,permission_classes
-from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
-from django.db.models import Avg
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+
 
 class CategoryListCreate(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -22,14 +18,17 @@ class CoursListCreate(generics.ListCreateAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursSerializer
 
+class CoursRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cours.objects.all()
+    serializer_class = CoursSerializer
+
 class CoursOnlyListCreate(generics.ListCreateAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursOnlySerializer
 
-
-class CoursRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class CoursOnlyRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cours.objects.all()
-    serializer_class = CoursSerializer
+    serializer_class = CoursOnlySerializer
 
 class LeconListCreate(generics.ListCreateAPIView):
     queryset = Lecon.objects.all()
@@ -95,6 +94,12 @@ class ReviewListCreate(generics.ListCreateAPIView):
 class ReviewRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+@api_view(['GET'])
+def courses_by_category(request, category_id):
+    courses = Cours.objects.filter(category_id=category_id)
+    serializer = CoursOnlySerializer(courses, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 def last_5_courses_api(request):
     courses = Cours.last_5_courses()
