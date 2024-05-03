@@ -27,6 +27,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*', 'http://localhost:3000']
+API_BASE_URL = 'http://192.168.1.15:8000'
 
 # Application definition
 

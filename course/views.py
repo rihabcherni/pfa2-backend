@@ -4,6 +4,7 @@ from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuV
 from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursOnlySerializer, CoursSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer, ReviewSerializer
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from django.conf import settings
 
 
 class CategoryListCreate(generics.ListCreateAPIView):
@@ -104,17 +105,18 @@ def courses_by_category(request, category_id):
 def last_5_courses_api(request):
     courses = Cours.last_5_courses()
     data = []
+    api_url = settings.API_BASE_URL
     for course in courses:
         author = course.auteur
         author_name = f"{author.first_name} {author.last_name}"
         
         cours_photo_url = course.cours_photo.url if course.cours_photo else None
         if cours_photo_url:
-            cours_photo_url = "http://localhost:8000" + cours_photo_url
+            cours_photo_url = api_url+cours_photo_url
 
         author_photo_url = author.photo.url if author.photo else None
         if author_photo_url:
-            author_photo_url = "http://localhost:8000" + author_photo_url
+            author_photo_url =api_url+author_photo_url
         course_data = {
             'id': course.id,
             'title': course.titre,

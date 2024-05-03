@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import  Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, Lecon, Inscription, Commentaire, Review
 from django.db.models import Sum
+from django.conf import settings
 
 class CategorySerializer(serializers.ModelSerializer):
     course_number = serializers.SerializerMethodField()
@@ -38,7 +39,8 @@ class CoursOnlySerializer(serializers.ModelSerializer):
     
     def get_auteur_photo(self, cours):
         if cours.auteur.photo:
-            return 'http://localhost:8000/'+cours.auteur.photo.url
+            api_url = settings.API_BASE_URL
+            return api_url+'/'+cours.auteur.photo.url
         else:
             return None
         
