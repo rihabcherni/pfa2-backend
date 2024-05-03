@@ -24,7 +24,7 @@ class Cours(models.Model):
     )
     
     LANGUE_CHOICES = (
-        ('français', 'Français'),
+        ('francais', 'Francais'),
         ('anglais', 'Anglais'),
         ('espagnol', 'Espagnol'),
         ('allemand', 'Allemand'),
