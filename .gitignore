@@ -15,7 +15,6 @@ db.sqlite3
 *.db
 
 # Ignore media and static files
-media/
 static/
 
 # Ignore secret keys or sensitive information
