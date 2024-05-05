@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework import generics
 from .models import Category, ContenuAudio, ContenuImage, ContenuTexte, ContenuVideo, Cours, Lecon, Inscription, Commentaire, Review
-from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursOnlySerializer, CoursSerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer, ReviewSerializer
+from .serializers import CategorySerializer, ContenuAudioSerializer, ContenuImageSerializer, ContenuTexteSerializer, ContenuVideoSerializer, CoursOnlySerializer, CoursSerializer, LeconOnlySerializer, LeconSerializer, InscriptionSerializer, CommentaireSerializer, ReviewSerializer
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from django.conf import settings
@@ -39,6 +39,13 @@ class LeconRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lecon.objects.all()
     serializer_class = LeconSerializer
 
+class LeconListByCourse(generics.ListAPIView):
+    serializer_class = LeconOnlySerializer
+
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        return Lecon.objects.filter(cours_id=course_id)
+    
 class ContenuTexteListCreate(generics.ListCreateAPIView):
     queryset = ContenuTexte.objects.all()
     serializer_class = ContenuTexteSerializer

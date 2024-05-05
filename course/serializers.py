@@ -87,7 +87,12 @@ class CoursSerializer(serializers.ModelSerializer):
         reviews = obj.reviews.all()
         serializer = ReviewSerializer(reviews,many=True)
         return serializer.data
- 
+
+class LeconOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecon
+        fields = '__all__'
+
 class LeconSerializer(serializers.ModelSerializer):
     image_number = serializers.SerializerMethodField()
     audio_number = serializers.SerializerMethodField()

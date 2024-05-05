@@ -13,10 +13,11 @@ urlpatterns = [
     path('cours-only/', CoursOnlyListCreate.as_view(), name='cours-only'),
     path('last-5-courses/', last_5_courses_api, name='last_5_courses_api'),
     path('courses/category/<int:category_id>/', courses_by_category, name='courses_by_category'),
+    path('courses/<int:course_id>/lessons/', LeconListByCourse.as_view(), name='course-lessons'),
 
     path('lecons/', LeconListCreate.as_view(), name='lecon-list-create'),
     path('lecons/<int:pk>/', LeconRetrieveUpdateDestroy.as_view(), name='lecon-retrieve-update-destroy'),
-   
+
     path('contenu-image/', ContenuImageListCreate.as_view(), name='contenu-image-list-create'),
     path('contenu-image/<int:pk>/', ContenuImageRetrieveUpdateDestroy.as_view(), name='contenu-image-retrieve-update-destroy'),
 
