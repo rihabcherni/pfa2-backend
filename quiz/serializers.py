@@ -1,17 +1,22 @@
 from rest_framework import serializers
-# from .models import 
+from .models import Quiz, QuestionQuiz, ReponseQuestionQuiz, ApprenantQuizReponse
 
-# class QuizSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Quiz
-#         fields = '__all__'
-    
-# class ApprenantQuizResponseSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ApprenantQuizResponse
-#         fields = ['quiz','apprenant','Apprenant_response']
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = '__all__'
 
-#     def validate_user(self, value):
-#         if value.type_user != 'apprenant':
-#             raise serializers.ValidationError("Only Apprenants can do the quiz.")
-#         return value
+class QuestionQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionQuiz
+        fields = '__all__'
+
+class ReponseQuestionQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReponseQuestionQuiz
+        fields = '__all__'
+
+class ApprenantQuizReponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApprenantQuizReponse
+        fields = '__all__'
