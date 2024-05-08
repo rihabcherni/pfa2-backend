@@ -1,7 +1,6 @@
 from django.db import models
 from accounts.models import User
 from course.models import Cours
-# Create your models here.
 
 class Discussion(models.Model):
     cours = models.ForeignKey(Cours, on_delete=models.CASCADE)

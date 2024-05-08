@@ -6,11 +6,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from datetime import datetime
-from django.db.models import Count, ExpressionWrapper, F, IntegerField
-from django.db.models.functions import ExtractMonth
-from django.db.models.functions import TruncMonth
 
-# Create your views here.
 class AdminDashCountAPIView(APIView):
     def get(self, request, format=None):
         admin_count = User.objects.get_count_by_type('admin')
@@ -27,24 +23,6 @@ class AdminDashCountAPIView(APIView):
         }
         serializer = DashAdminCountSerializer(data)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-# def get_course_counts_by_month(request):
-#     all_years = Cours.objects.dates('created_at', 'year')
-#     course_counts_by_year = {}
-
-#     for year in all_years:
-#         year_int = year.year
-#         course_counts = Cours.objects.filter(created_at__year=year_int)
-#         counts_by_month = [0] * 12
-#         for course in course_counts:
-#             month = course.created_at.month
-#             counts_by_month[month - 1] += 1
-#         course_counts_by_year[year_int] = counts_by_month
-
-#     response_data = {
-#         'course_counts_by_year': course_counts_by_year
-#     }
-#     return JsonResponse(response_data)
 
 def get_course_counts_by_month(request):
     year = int(request.GET.get('year', datetime.now().year))

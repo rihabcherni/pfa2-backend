@@ -7,6 +7,6 @@ from .models import Lecon, contenuTexte, contenuImage, contenuVideo, contenuAudi
 @receiver(post_save, sender=contenuVideo)
 @receiver(post_save, sender=contenuAudio)
 def incrementer_ordre(sender, instance, created, **kwargs):
-    if created:  # Vérifier si un nouvel objet est créé
+    if created:  
         lecon = instance.lecon
         lecon.incrementer_ordre()
